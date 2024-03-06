@@ -1,6 +1,6 @@
 FROM python:3.12.2-bookworm
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/api
 
 # misc packages
 RUN apt-get update && \

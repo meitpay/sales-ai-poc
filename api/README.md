@@ -74,7 +74,8 @@ Run `python api.py` to start the API.
 
 **Linux/WSL/Mac**
 
-Run the `exec.sh` script with optional params; run `docker compose up --help` in the terminal to see the options available
+- Run the `exec.sh` script with optional params; run `docker compose up --help` for options
+- Run `docker compose exec api zsh` to enter the shell of the application in Docker
 
 **Windows**
 
