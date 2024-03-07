@@ -9,6 +9,8 @@ RUN apt-get update && \
 	git \
 	vim \
 	curl \
+	wget \
+	inetutils-tools \
 	nano
 
 # oh-my-zsh
@@ -19,4 +21,5 @@ COPY ./requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Keep the container alive, currently we're only running a simple script
-CMD ["python", "api.py"]
+CMD ["./docker/scripts/entrypoint.sh"]
+

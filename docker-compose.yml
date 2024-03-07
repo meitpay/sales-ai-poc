@@ -1,0 +1,30 @@
+version: "3.6"
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: docker/Dockerfile
+    working_dir: /usr/src/api
+    ports:
+      - ${API_PORT:-5000}:5000
+    volumes:
+      - ./api:/usr/src/api
+    environment:
+      - ENVIRONMENT=${API_ENV:-development}
+    env_file:
+      - ./api/.env
+  app:
+    build:
+      context: ./app
+      dockerfile: docker/Dockerfile
+    working_dir: /usr/src/app
+    ports:
+      - ${VITE_APP_PORT:-3000}:3000
+    volumes:
+      - ./app:/usr/src/app
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    env_file:
+      - ./app/.env
+    depends_on:
+      - api

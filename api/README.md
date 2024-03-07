@@ -1,18 +1,17 @@
-# Sales AI
+# Backend
 
-PoC
+Simple Flask API with CrewAI multiagents.
 
-## Getting Started
 
 This project is using Python, Docker and CrewAI.
 
 Check out CrewAI's [Getting started](https://github.com/joaomdmoura/crewAI?tab=readme-ov-file#getting-started) to get familiar with multi-agents.
 
+## Installation
+
+If you want to use Docker, check out the README.md in the root folder of this project.
+
 ### Linux
-
-You can either setup the application on your computer or use Docker.
-
-#### Installation
 
 **Make sure you have python installed**
 
@@ -53,31 +52,8 @@ Copy `.env.example` to `.env` and populate it
 cp .env.example .env
 ```
 
-
-### Docker
-
-Make sure you have [Docker](https://docs.docker.com/get-docker/) installed.
-
-Copy `.env.example` to `.env` and populate with your OpenAI API key
+#### Run the API
 
 ```bash
-cp .env.example .env
+python api.py
 ```
-
-## Run the Application
-
-### Linux
-
-Run `python api.py` to start the API.
-
-### Docker
-
-**Linux/WSL/Mac**
-
-- Run the `exec.sh` script with optional params; run `docker compose up --help` for options
-- Run `docker compose exec api zsh` to enter the shell of the application in Docker
-
-**Windows**
-
-- Run `docker compose down` to stop and remove containers and networks
-- Run `docker compose up -d --build` to create and start the application in detached mode
