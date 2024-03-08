@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-python api.py
+python app.py
