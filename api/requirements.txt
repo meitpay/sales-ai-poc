@@ -2,3 +2,4 @@ Flask
 crewai
 crewai[tools]
 python-dotenv
+flask-cors

@@ -1,34 +1,47 @@
-from flask import Flask
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
+from flask_cors import CORS
 import subprocess
-import json
-
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def hello_world():
     return 'Hello, Docker!'
 
+def run_process_and_stream_output(command):
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+
+    # Stream each line of the output
+    for line in iter(process.stdout.readline, ''):
+        yield line
+
+    process.stdout.close()
+    return_code = process.wait()
+    if return_code:
+        raise subprocess.CalledProcessError(return_code, command)
+
 @app.route('/process-data', methods=['POST'])
 def process_data():
-    # Extract form data
-    form_data = request.form.to_dict()
+    try:
+        data = request.get_json()
+        company_description = data['company']
+        company_domain = data['domain']
+        hiring_needs = data['needs']
+        specific_benefits = data['benefits']
 
-    # Convert form data to JSON string
-    form_data_json = json.dumps(form_data)
+        command = [
+            'python', 'crewai/main.py',
+            '--company_description', company_description,
+            '--company_domain', company_domain,
+            '--hiring_needs', hiring_needs,
+            '--specific_benefits', specific_benefits
+        ]
 
-    # Call the crewai/main.py script with the form data
-    result = subprocess.run(['python', 'crewai/main.py', form_data_json], capture_output=True, text=True)
+        return Response(run_process_and_stream_output(command), mimetype='text/plain')
 
-    # Check if the script executed successfully
-    if result.returncode == 0:
-        # Return the output from the script
-        return jsonify({"result": result.stdout.strip()})
-    else:
-        # In case of an error, return the error message
-        return jsonify({"error": result.stderr.strip()}), 500
-
+    except Exception as e:
+        return f"An error occurred: {e}", 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

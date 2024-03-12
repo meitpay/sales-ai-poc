@@ -38,7 +38,7 @@ class Tasks():
 						expected_output=dedent("""\
 								A polished, error-free job posting that is clear, engaging, and perfectly aligned with the company's culture and values. Feedback on potential improvements and final approval for publishing. Formated in markdown."""),
 						agent=agent,
-						output_file="job_posting.md"
+						output_file="./io/job_posting.md"
 				)
 
 		def industry_analysis_task(self, agent, company_domain, company_description):

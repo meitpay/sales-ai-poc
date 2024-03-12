@@ -1,18 +1,28 @@
+import argparse
 from dotenv import load_dotenv
 load_dotenv()
 
 from crewai import Crew
-
 from tasks import Tasks
 from agents import Agents
 
+# Parse command line arguments
+parser = argparse.ArgumentParser(description="Generate a job posting based on company information.")
+parser.add_argument("--company_description", required=True, help="Description of the company.")
+parser.add_argument("--company_domain", required=True, help="Domain of the company.")
+parser.add_argument("--hiring_needs", required=True, help="Hiring needs of the company.")
+parser.add_argument("--specific_benefits", required=True, help="Specific benefits offered by the company.")
+args = parser.parse_args()
+
+# Use arguments
+company_description = args.company_description
+company_domain = args.company_domain
+hiring_needs = args.hiring_needs
+specific_benefits = args.specific_benefits
+
+# Rest of your script remains the same
 tasks = Tasks()
 agents = Agents()
-
-company_description = input("What is the company description?\n")
-company_domain = input("What is the company domain?\n")
-hiring_needs = input("What are the hiring needs?\n")
-specific_benefits = input("What are specific_benefits you offer?\n")
 
 # Create Agents
 researcher_agent = agents.research_agent()

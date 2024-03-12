@@ -1,10 +1,17 @@
-import { Box, Button, Code, Group, TextInput, Textarea } from '@mantine/core'
+import { Box, Button, Group, TextInput, Textarea, Container } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useState } from 'react'
 import { isStringLengthZero, isValidURL, prependHttpsToURL } from '../../utils/stringUtils'
+import StreamingComponent from '../stream/StreamingComponent.tsx'
+
+interface Props {
+  domain: string,
+  company: string,
+  needs: string,
+  benefits: string
+}
 
 const SalesForm = () => {
-  const [submittedValues, setSubmittedValues] = useState('')
 
   const form = useForm({
     initialValues: {
@@ -20,6 +27,8 @@ const SalesForm = () => {
       benefits: (value) => isStringLengthZero(value) ? 'Missing benefits' : null
     }
   })
+
+  const [submittedValues, setSubmittedValues] = useState<Props | undefined>(undefined)
 
 
   const fields = {
@@ -42,36 +51,38 @@ const SalesForm = () => {
   }
 
   return (
-    <Box maw={720} mx="auto">
-      <form onSubmit={form.onSubmit((values) => {
-        values.domain = prependHttpsToURL(values.domain)
-        setSubmittedValues(JSON.stringify(values, null, 2))
-      })}>
-        <TextInput label={fields.domain.label}
-                   placeholder={fields.domain.description} {...form.getInputProps('domain')} />
-        <Textarea autosize label={fields.company.label}
-                  placeholder={fields.company.description} {...form.getInputProps('company')} />
-        <Textarea autosize label={fields.needs.label}
-                  placeholder={fields.needs.description} {...form.getInputProps('needs')} />
-        <Textarea autosize label={fields.benefits.label}
-                  placeholder={fields.benefits.description} {...form.getInputProps('benefits')} />
+    <Container>
+      <Box maw={720} mx="auto">
+        <form onSubmit={form.onSubmit((values) => {
+          values.domain = prependHttpsToURL(values.domain)
+          setSubmittedValues(values)
+        })}>
+          <TextInput label={fields.domain.label}
+                     placeholder={fields.domain.description} {...form.getInputProps('domain')} />
+          <Textarea autosize label={fields.company.label}
+                    placeholder={fields.company.description} {...form.getInputProps('company')} />
+          <Textarea autosize label={fields.needs.label}
+                    placeholder={fields.needs.description} {...form.getInputProps('needs')} />
+          <Textarea autosize label={fields.benefits.label}
+                    placeholder={fields.benefits.description} {...form.getInputProps('benefits')} />
 
-        <Group>
-          <Button type="submit" mt="md">
-            Submit
-          </Button>
-          <Button color="red" type="reset" mt="md" onClick={() => {
-            form.reset()
-            setSubmittedValues('')
-          }}>
-            Reset to initial values
-          </Button>
-        </Group>
+          <Group>
+            <Button type="submit" mt="md">
+              Submit
+            </Button>
+            <Button color="red" type="reset" mt="md" onClick={() => {
+              form.reset()
+              setSubmittedValues(undefined)
+            }}>
+              Reset to initial values
+            </Button>
+          </Group>
+        </form>
+      </Box>
 
-        {submittedValues && <Code block style={{ marginTop: '10px' }}>{submittedValues}</Code>}
-      </form>
+      {submittedValues && <StreamingComponent data={submittedValues} />}
 
-    </Box>
+    </Container>
   )
 }
 

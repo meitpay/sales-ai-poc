@@ -11,6 +11,7 @@ RUN apt-get update && \
 	curl \
 	wget \
 	inetutils-tools \
+    inetutils-ping \
 	nano
 
 # oh-my-zsh
