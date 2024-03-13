@@ -4,11 +4,11 @@ from crewai_tools.tools import WebsiteSearchTool, SerperDevTool, FileReadTool
 web_search_tool = WebsiteSearchTool()
 serper_dev_tool = SerperDevTool()
 file_read_tool = FileReadTool(
-	file_path='./io/job_description_example.md',
+	file_path='./io/templates/job_description_example.md',
 	description='A tool to read the job description example file.'
 )
 
-class Agents():
+class Agents:
 	def research_agent(self):
 		return Agent(
 			role='Research Analyst',
@@ -19,7 +19,7 @@ class Agents():
 		)
 
 	def writer_agent(self):
-			return Agent(
+		return Agent(
 				role='Job Description Writer',
 				goal='Use insights from the Research Analyst to create a detailed, engaging, and enticing job posting.',
 				tools=[web_search_tool, serper_dev_tool, file_read_tool],

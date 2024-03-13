@@ -1,7 +1,8 @@
 from textwrap import dedent
 from crewai import Task
+import time
 
-class Tasks():
+class Tasks:
 		def research_company_culture_task(self, agent, company_description, company_domain):
 				return Task(
 						description=dedent(f"""\
@@ -38,7 +39,8 @@ class Tasks():
 						expected_output=dedent("""\
 								A polished, error-free job posting that is clear, engaging, and perfectly aligned with the company's culture and values. Feedback on potential improvements and final approval for publishing. Formated in markdown."""),
 						agent=agent,
-						output_file="./io/job_posting.md"
+						output_file = f"./io/output/{int(time.time())}_job_posting.md"
+
 				)
 
 		def industry_analysis_task(self, agent, company_domain, company_description):

@@ -1,7 +1,6 @@
 # Backend
 
-Simple Flask API with CrewAI multiagents.
-
+Simple Flask API with CrewAI multi-agents.
 
 This project is using Python, Docker and CrewAI.
 
@@ -13,38 +12,38 @@ If you want to use Docker, check out the README.md in the root folder of this pr
 
 ### Linux
 
-**Make sure you have python installed**
+#### Make sure you have python installed
 
 ```bash
 sudo apt install python3 python3-pip ipython3 python3-venv
 ```
 
-**Add python to ``$PATH`` and add an alias in your bash environment**
+#### Add python to ``$PATH`` and add an alias in your bash environment
 
 ```bash
 PATH=”$PATH:/usr/bin/python3”
 alias python=python3
 ```
 
-**Create a python virtual environment**
+#### Create a python virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-**Activate the virtual environment**
+#### Activate the virtual environment
 
 ```bash
 source venv/bin/activate
 ```
 
-**Install dependencies:**
+#### Install dependencies
 
 ```bash
 pip install --no-cache-dir -r requirements.txt
 ```
 
-**Env variables**
+#### Env variables
 
 Copy `.env.example` to `.env` and populate it
 
@@ -55,5 +54,5 @@ cp .env.example .env
 #### Run the API
 
 ```bash
-python api.py
+python app.py
 ```
