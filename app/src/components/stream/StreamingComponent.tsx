@@ -1,26 +1,22 @@
 import { useState, useEffect } from 'react'
 import { Code } from '@mantine/core'
 
-const API_ENDPOINT = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
-
 interface Props {
-  data: {
-    domain: string,
-    company: string,
-    needs: string,
-    benefits: string
-  }
+  data: Record<string, unknown>,
+  url: string
 }
 
-const StreamingComponent = ({ data }: Props) => {
+const StreamingComponent = ({ data, url }: Props) => {
   const [streamData, setStreamData] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
+      setIsError(false)
       try {
-        const response = await fetch(`${API_ENDPOINT}/process-data`, {
+        const response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -43,17 +39,19 @@ const StreamingComponent = ({ data }: Props) => {
 
       } catch (error) {
         console.error('Fetch error:', error)
+        setIsError(true)
         setIsLoading(false)
       }
     }
 
-    fetchData().then(() => console.log('All done'))
-  }, [data])
+    fetchData().then(() => setIsLoading(false))
+  }, [data, url])
 
   return (
     <div>
-      <h3>Streamed Data:</h3>
-      {isLoading && <p>Fetching data...</p>}
+      <h3>Response</h3>
+      {isLoading && <p>Working...</p>}
+      {isError && <p>Something wrong happened...</p>}
       <Code block dangerouslySetInnerHTML={{ __html: streamData }} style={{ whiteSpace: 'pre-wrap' }} />
     </div>
   )

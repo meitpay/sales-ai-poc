@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPage from './components/layout/ErrorPage.tsx'
 import App from './App.tsx'
 import { JobListing } from './components/forms/JobListing.tsx'
-import { PeopleSearch } from './components/forms/PeopleSearch.tsx'
+import { PersonSearch } from './components/forms/PersonSearch.tsx'
 import { MantineProvider } from '@mantine/core'
 
 const router = createBrowserRouter([
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'people-search',
-        element: <PeopleSearch />
+        element: <PersonSearch />
       }
     ]
   }
