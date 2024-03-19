@@ -7,45 +7,48 @@ serper_dev_tool = SerperDevTool()
 
 
 class PeopleAgents:
-    def research_agent(self):
+    @staticmethod
+    def research_agent():
         return Agent(
             role='Research Analyst',
             goal=dedent("""\
-			To gather comprehensive and accurate information about individuals, 
-			their professional achievements, academic backgrounds, affiliations, 
-			and historical mentions in media and publications.
-			"""),
+                To gather comprehensive and accurate information about individuals, 
+                their professional achievements, academic backgrounds, affiliations, 
+                and historical mentions in media and publications.
+			    """),
             tools=[web_search_tool, serper_dev_tool],
-            backstory=dedent("""\ 
-			Skilled in analyzing individuals, their professional experiences and achievements, 
-			identifying their key values, associates and connections   
-			from various sources, including websites and brief descriptions.
-			"""),
+            backstory=dedent("""\
+                Skilled in analyzing individuals, their professional experiences and achievements, 
+                identifying their key values, associates and connections   
+                from various sources, including websites and brief descriptions.
+			    """),
             verbose=True
         )
 
-    def social_media_research_agent(self):
+    @staticmethod
+    def social_media_agent():
         return Agent(
             role='Social Media Investigator',
-            goal=dedent("""\ 
+            goal=dedent("""\
 				To analyze social media profiles 
 				and online presence to understand a persona\'s interests, 
 				social circles, and public persona
-				"""),
+                """),
             tools=[web_search_tool, serper_dev_tool],
             backstory=dedent("""\
 				A former investigative journalist, known for his knack for understanding the nuances of online behavior, 
 				brings his expertise in social media analysis. 
 				He excels in connecting dots across various online platforms to create a comprehensive 
 				picture of an individual's digital footprint.
-				"""),
+                """),
             verbose=True
         )
 
-    def writer_agent(self):
+    @staticmethod
+    def writer_agent():
         return Agent(
             role='Investigative Writer',
-            goal=dedent("""\ 
+            goal=dedent("""\
 				Use insights from the Research Analyst and the Social Media Investigator to craft detailed, engaging, and accurate narratives 
 				about individuals, integrating diverse information into comprehensive biographical summaries, always site your sources.
 				"""),
@@ -61,10 +64,11 @@ class PeopleAgents:
             verbose=True
         )
 
-    def review_agent(self):
+    @staticmethod
+    def review_agent():
         return Agent(
             role='Review and Editing Specialist',
-            goal=dedent("""\ 
+            goal=dedent("""\
 				To meticulously review, fact-check, and refine written content, ensuring its accuracy, fairness, and readability
 				"""),
             tools=[web_search_tool, serper_dev_tool],
