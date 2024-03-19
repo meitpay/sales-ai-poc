@@ -2,34 +2,39 @@ import { useState } from 'react'
 import { Container, Group } from '@mantine/core'
 import classes from './Header.module.css'
 import { ThemeColor } from './AppTheme'
+import { Link } from 'react-router-dom'
 
-const links = [
+interface Links {
+  link: string,
+  label: string
+}
+
+const links: Links[] = [
   { link: '/', label: 'Home' },
-  { link: '/faq', label: 'FAQ' }
+  { link: '/job-listing', label: 'Job Listing' },
+  { link: '/people-search', label: 'People Search' }
 ]
 
 export function Header() {
   const [active, setActive] = useState(links[0].link)
 
-  const items = links.map((link) => (
-    <a
+  const items = links.map((link: Links) => (
+    <Link
       key={link.label}
-      href={link.link}
       className={classes.link}
       data-active={active === link.link || undefined}
-      onClick={(event) => {
-        event.preventDefault()
+      onClick={() => {
         setActive(link.link)
       }}
-    >
+      to={link.link}>
       {link.label}
-    </a>
+    </Link>
   ))
 
   return (
     <header className={classes.header}>
-      <Container size="xl" className={classes.inner}>
-        <Group gap={5} visibleFrom="md">
+      <Container size='xl' className={classes.inner}>
+        <Group gap={5} visibleFrom='md'>
           {items}
         </Group>
         <ThemeColor />
