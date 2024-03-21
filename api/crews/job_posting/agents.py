@@ -9,7 +9,8 @@ file_read_tool = FileReadTool(
 )
 
 class Agents:
-	def research_agent(self):
+	@staticmethod
+	def research_agent():
 		return Agent(
 			role='Research Analyst',
 			goal='Analyze the company website and provided description to extract insights on culture, values, and specific needs.',
@@ -18,7 +19,8 @@ class Agents:
 			verbose=True
 		)
 
-	def writer_agent(self):
+	@staticmethod
+	def writer_agent():
 		return Agent(
 				role='Job Description Writer',
 				goal='Use insights from the Research Analyst to create a detailed, engaging, and enticing job posting.',
@@ -27,7 +29,8 @@ class Agents:
 				verbose=True
 			)
 
-	def review_agent(self):
+	@staticmethod
+	def review_agent():
 			return Agent(
 				role='Review and Editing Specialist',
 				goal='Review the job posting for clarity, engagement, grammatical accuracy, and alignment with company values and refine it to ensure perfection.',

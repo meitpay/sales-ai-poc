@@ -1,7 +1,7 @@
 {
-  "name": "my-vue-app",
+  "name": "sales-ai-assistant",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,13 +14,18 @@
     "@mantine/form": "^7.6.1",
     "@mantine/hooks": "^7.6.1",
     "@tabler/icons-react": "^2.47.0",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "sort-by": "^0.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.25",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "@vitejs/plugin-react": "^4.2.1",

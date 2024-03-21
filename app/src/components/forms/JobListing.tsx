@@ -1,17 +1,12 @@
 import { Box, Button, Group, TextInput, Textarea, Container } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useState } from 'react'
-import { isStringLengthZero, isValidURL, prependHttpsToURL } from '../../utils/stringUtils'
+import { isStringLengthZero, isValidURL, prependHttpsToURL } from '../../utils/stringUtils.ts'
 import StreamingComponent from '../stream/StreamingComponent.tsx'
 
-interface Props {
-  domain: string,
-  company: string,
-  needs: string,
-  benefits: string
-}
+const API_ENDPOINT = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
 
-const SalesForm = () => {
+const JobListing = () => {
 
   const form = useForm({
     initialValues: {
@@ -28,7 +23,7 @@ const SalesForm = () => {
     }
   })
 
-  const [submittedValues, setSubmittedValues] = useState<Props | undefined>(undefined)
+  const [submittedValues, setSubmittedValues] = useState<Record<string, unknown> | undefined>(undefined)
 
 
   const fields = {
@@ -52,7 +47,7 @@ const SalesForm = () => {
 
   return (
     <Container>
-      <Box maw={720} mx="auto">
+      <Box maw={720} mx='auto'>
         <form onSubmit={form.onSubmit((values) => {
           values.domain = prependHttpsToURL(values.domain)
           setSubmittedValues(values)
@@ -67,10 +62,10 @@ const SalesForm = () => {
                     placeholder={fields.benefits.description} {...form.getInputProps('benefits')} />
 
           <Group>
-            <Button type="submit" mt="md">
+            <Button type='submit' mt='md'>
               Submit
             </Button>
-            <Button color="red" type="reset" mt="md" onClick={() => {
+            <Button color='red' type='reset' mt='md' onClick={() => {
               form.reset()
               setSubmittedValues(undefined)
             }}>
@@ -80,12 +75,12 @@ const SalesForm = () => {
         </form>
       </Box>
 
-      {submittedValues && <StreamingComponent data={submittedValues} />}
+      {submittedValues && <StreamingComponent data={submittedValues} url={`${API_ENDPOINT}/job-listing`} />}
 
     </Container>
   )
 }
 
 export {
-  SalesForm
+  JobListing
 }
