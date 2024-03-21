@@ -48,8 +48,7 @@ review_agent = agents.review_agent()
 research_person_task = tasks.research_person_task(researcher_agent, person_name, misc_information, websites)
 social_media_task = tasks.research_social_media_task(social_media_agent, person_name, social_media_profiles)
 draft_person_profile_task = tasks.draft_person_profile_task(writer_agent, person_name)
-review_and_edit_profile_task = tasks.review_and_edit_profile_task(review_agent, person_name)
-person_report_task = tasks.create_person_profile(writer_agent, person_name)
+review_and_create_profile_task = tasks.review_and_edit_profile_task(review_agent, person_name)
 
 # Instantiate the crew with a sequential process
 crew = Crew(
@@ -57,12 +56,13 @@ crew = Crew(
         researcher_agent,
         social_media_agent,
         writer_agent,
-        review_agent],
+        review_agent
+    ],
     tasks=[
         research_person_task,
         social_media_task,
         draft_person_profile_task,
-        review_and_edit_profile_task
+        review_and_create_profile_task
     ]
 )
 
@@ -73,3 +73,4 @@ result = crew.kickoff()
 
 print('---------- Person Crew Result ----------')
 print(result)
+print('---------- Person Crew Complete ----------')

@@ -87,25 +87,3 @@ class PeopleTasks:
             agent=agent,
             output_file=f"./io/output/{int(time.time())}_{person_name.replace(' ', '_')}_draft.md"
         )
-
-    @staticmethod
-    def create_person_profile(agent, person_name):
-        return Task(
-            description=dedent(f"""\
-                Review the draft profile of {person_name} for accuracy, clarity, and completeness. 
-                Check for any factual errors, inconsistencies, or unclear sections in the text. 
-                Ensure that the narrative flows logically and is engaging for the reader. 
-                Verify that all the information provided is backed up by sources, 
-                and that these sources are properly cited within the profile. 
-                Suggest improvements or corrections where necessary, 
-                focusing on enhancing the quality and reliability of the profile.
-                """),
-            expected_output=dedent(f"""\
-                A detailed, polished, and well-structured report for the profile of {person_name}.
-                It should be an error-free report that is clear, engaging and easy to read. 
-                Feedback on potential improvements and final approval for publishing.
-                Formatted in markdown.
-                """),
-            agent=agent,
-            output_file=f"./io/output/{int(time.time())}_{person_name.replace(' ', '_')}_profile.md"
-        )
