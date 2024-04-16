@@ -6,6 +6,7 @@ load_dotenv()
 from crewai import Crew
 from tasks import PeopleTasks
 from agents import PeopleAgents
+from crewai_tools.tools import SerperDevTool, WebsiteSearchTool
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="Generate a person profile based research.")
@@ -15,7 +16,7 @@ parser.add_argument(
     help="The name of the person.")
 parser.add_argument(
     "--websites",
-    required=True,
+    required=False,
     help="Comma seperated list of research domains.")
 parser.add_argument(
     "--misc_information",
@@ -38,39 +39,44 @@ social_media_profiles = args.social_media_profiles
 tasks = PeopleTasks()
 agents = PeopleAgents()
 
+website_agents = {}
+some_agents = {}
+
 # Create Agents
-researcher_agent = agents.research_agent()
-social_media_agent = agents.social_media_agent()
+search_agent = agents.research_agent([SerperDevTool()])
 writer_agent = agents.writer_agent()
-review_agent = agents.review_agent()
 
 # Define Tasks for each agent
-research_person_task = tasks.research_person_task(researcher_agent, person_name, misc_information, websites)
-social_media_task = tasks.research_social_media_task(social_media_agent, person_name, social_media_profiles)
-draft_person_profile_task = tasks.draft_person_profile_task(writer_agent, person_name)
-review_and_create_profile_task = tasks.review_and_edit_profile_task(review_agent, person_name)
+
+all_agents = []
+all_tasks = []
+
+if social_media_profiles:
+    for index, profile in enumerate(social_media_profiles.split(',')):
+        profile = profile.strip()
+        some_agents[f'social_media_agent_{index}'] = agents.social_media_agent([WebsiteSearchTool(profile)])
+        current_agent = some_agents[f'social_media_agent_{index}']
+        all_agents.append(current_agent)
+        all_tasks.append(tasks.research_social_media_task(current_agent, person_name, profile))
+
+if websites:
+    for index, website in enumerate(websites.split(',')):
+        website = website.strip()
+        some_agents[f'researcher_agent{index}'] = agents.social_media_agent([WebsiteSearchTool(website)])
+        current_agent = some_agents[f'researcher_agent{index}']
+        all_agents.append(current_agent)
+        all_tasks.append(tasks.research_person_task(current_agent, person_name, website, misc_information))
+
+all_agents.append(search_agent)
+all_agents.append(writer_agent)
+
+search_task = tasks.search_web_task(search_agent, person_name, all_tasks)
+all_tasks.append(search_task)
+write_report_task = tasks.person_summary_task(writer_agent, person_name, all_tasks)
+all_tasks.append(write_report_task)
 
 # Instantiate the crew with a sequential process
-crew = Crew(
-    agents=[
-        researcher_agent,
-        social_media_agent,
-        writer_agent,
-        review_agent
-    ],
-    tasks=[
-        research_person_task,
-        social_media_task,
-        draft_person_profile_task,
-        review_and_create_profile_task
-    ]
-)
-
-print('---------- Person Crew Kicking Off ----------')
+crew = Crew(agents=all_agents, tasks=all_tasks)
 
 # Kick off the process
 result = crew.kickoff()
-
-print('---------- Person Crew Result ----------')
-print(result)
-print('---------- Person Crew Complete ----------')

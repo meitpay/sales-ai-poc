@@ -46,7 +46,6 @@ def job_listing():
 
 @app.route('/person-search', methods=['POST'])
 def person_search():
-    print('---------- Person Search ----------')
     try:
         data = request.get_json()
         person_name = data['person']

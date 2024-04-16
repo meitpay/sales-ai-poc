@@ -1,14 +1,10 @@
 from crewai import Agent
-from crewai_tools.tools import WebsiteSearchTool, SerperDevTool
 from textwrap import dedent
-
-web_search_tool = WebsiteSearchTool()
-serper_dev_tool = SerperDevTool()
 
 
 class PeopleAgents:
     @staticmethod
-    def research_agent():
+    def research_agent(tools):
         return Agent(
             role='Research Analyst',
             goal=dedent("""\
@@ -16,7 +12,7 @@ class PeopleAgents:
                 their professional achievements, academic backgrounds, affiliations, 
                 and historical mentions in media and publications.
 			    """),
-            tools=[web_search_tool, serper_dev_tool],
+            tools=tools,
             backstory=dedent("""\
                 Skilled in analyzing individuals, their professional experiences and achievements, 
                 identifying their key values, associates and connections   
@@ -26,15 +22,14 @@ class PeopleAgents:
         )
 
     @staticmethod
-    def social_media_agent():
+    def social_media_agent(tools):
         return Agent(
             role='Social Media Investigator',
             goal=dedent("""\
-				To analyze social media profiles 
-				and online presence to understand a persona\'s interests, 
+				To analyze the social media profile and online presence to understand a persona\'s interests, 
 				social circles, and public persona
                 """),
-            tools=[web_search_tool, serper_dev_tool],
+            tools=tools,
             backstory=dedent("""\
 				A former investigative journalist, known for his knack for understanding the nuances of online behavior, 
 				brings his expertise in social media analysis. 
@@ -52,7 +47,6 @@ class PeopleAgents:
 				Use insights from the Research Analyst and the Social Media Investigator to craft detailed, engaging, and accurate narratives 
 				about individuals, integrating diverse information into comprehensive biographical summaries, always site your sources.
 				"""),
-            tools=[web_search_tool, serper_dev_tool],
             backstory=dedent("""\
 				A seasoned journalist with a passion for biographies, made her mark in investigative journalism. 
 				Her knack for storytelling led her to specialize in writing detailed profiles, 
@@ -60,20 +54,6 @@ class PeopleAgents:
 				She's writing is known for its depth, clarity, and engaging style. 
 				She often spends time researching her subjects extensively, 
 				ensuring that every article she writes is well-informed and nuanced.
-				"""),
-            verbose=True
-        )
-
-    @staticmethod
-    def review_agent():
-        return Agent(
-            role='Review and Editing Specialist',
-            goal=dedent("""\
-				To meticulously review, fact-check, and refine written content, ensuring its accuracy, fairness, and readability
-				"""),
-            tools=[web_search_tool, serper_dev_tool],
-            backstory=dedent("""\
-				A meticulous editor with an eye for detail, ensuring every piece of content is clear, engaging, and grammatically perfect.
 				"""),
             verbose=True
         )
