@@ -1,8 +1,9 @@
-import { Box, Button, Group, TextInput, Textarea, Container, Space, Divider, Text } from '@mantine/core'
+import { Box, Button, Group, TextInput, Textarea, Container, Space, Divider, Text, Grid } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useState } from 'react'
 import StreamingComponent from '../stream/StreamingComponent.tsx'
 import { isStringLengthZero } from '../../utils/stringUtils.ts'
+import { IconMinus, IconPlus } from '@tabler/icons-react'
 
 const API_ENDPOINT = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
 
@@ -16,7 +17,7 @@ const PersonSearch = () => {
       soMeProfiles: []
     },
     validate: {
-      person: (value) => isStringLengthZero(value) ? 'Missing name of the person' : null,
+      person: (value: string): string | null => isStringLengthZero(value) ? 'Missing name of the person' : null
     }
   })
 
@@ -55,17 +56,25 @@ const PersonSearch = () => {
         <form onSubmit={form.onSubmit((values) => {
           setSubmittedValues(values)
         })}>
-          <TextInput label={fields.person.label}
-                     placeholder={fields.person.description} {...form.getInputProps('person')} />
+          <TextInput label={fields.person.label} placeholder={fields.person.description} {...form.getInputProps('person')} />
 
-          <Textarea autosize label={fields.miscInfo.label}
-                    placeholder={fields.miscInfo.description} {...form.getInputProps('miscInfo')} />
+          <Textarea autosize label={fields.miscInfo.label} placeholder={fields.miscInfo.description} {...form.getInputProps('miscInfo')} />
 
           <Divider my='md' />
 
-          <Text fw={500}>
-            {fields.websites.label}
-          </Text>
+          <Grid>
+            <Grid.Col span={10}>
+              <Text fw={500}>
+                {fields.websites.label}
+              </Text>
+            </Grid.Col>
+            <Grid.Col span={1}>
+              <Button variant='light' color={'teal'} onClick={() => addField('websites')}><IconPlus /></Button>
+            </Grid.Col>
+            <Grid.Col span={1}>
+              <Button variant='light' color='red' onClick={() => removeField('websites', form.values.websites.length)}><IconMinus /></Button>
+            </Grid.Col>
+          </Grid>
 
           {form.values.websites.map((_, index) => (
             <Group key={index}>
@@ -78,21 +87,26 @@ const PersonSearch = () => {
             </Group>
           ))}
 
-          <Space h='xs' />
-
-          <Group grow>
-            <Button onClick={() => addField('websites')}>Add Website</Button>
-            <Button color='red' onClick={() => removeField('websites', form.values.websites.length)}>Remove Website</Button>
-          </Group>
-
           <Divider my='md' />
 
-          <Text fw={500}>
-            {fields.soMeProfiles.label}
-          </Text>
+          <Grid>
+            <Grid.Col span={10}>
+              <Text fw={500}>
+                {fields.soMeProfiles.label}
+              </Text>
+            </Grid.Col>
+            <Grid.Col span={1}>
+              <Button variant='light' color={'teal'} onClick={() => addField('soMeProfiles')}><IconPlus /></Button>
+            </Grid.Col>
+            <Grid.Col span={1}>
+              <Button variant='light' color='red' onClick={() => removeField('soMeProfiles', form.values.soMeProfiles.length)}><IconMinus /></Button>
+            </Grid.Col>
+          </Grid>
 
           {form.values.soMeProfiles.map((_, index) => (
             <Group key={index}>
+              <Space h='xs' />
+
               <TextInput
                 style={{ width: '100%' }}
                 placeholder={fields.soMeProfiles.description}
@@ -101,19 +115,12 @@ const PersonSearch = () => {
             </Group>
           ))}
 
-          <Space h='xs' />
-
-          <Group grow>
-            <Button onClick={() => addField('soMeProfiles')}>Add Social Media Profile</Button>
-            <Button color='red' onClick={() => removeField('soMeProfiles', form.values.soMeProfiles.length)}>Remove Social Media Profile</Button>
-          </Group>
-
           <Divider my='md' />
           <Group grow>
-            <Button type='submit' mt='md'>
+            <Button variant='light' color='teal' type='submit' mt='md'>
               Submit
             </Button>
-            <Button color='red' type='reset' mt='md' onClick={() => {
+            <Button variant='light' color='red' type='reset' mt='md' onClick={() => {
               form.reset()
               setSubmittedValues(undefined)
             }}>

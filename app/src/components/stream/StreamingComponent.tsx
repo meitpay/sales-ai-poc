@@ -1,5 +1,9 @@
-import { useState, useEffect } from 'react'
-import { Code } from '@mantine/core'
+import { useState, useEffect, useRef } from 'react'
+import { Alert, Button, Code, Group, Loader, Space } from '@mantine/core'
+import AnsiToHtml from 'ansi-to-html'
+import { IconInfoCircle } from '@tabler/icons-react'
+
+const ansiToHtml = new AnsiToHtml()
 
 interface Props {
   data: Record<string, unknown>,
@@ -9,12 +13,19 @@ interface Props {
 const StreamingComponent = ({ data, url }: Props) => {
   const [streamData, setStreamData] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [isError, setIsError] = useState(false)
+  const [error, setError] = useState<Record<string, boolean | string | undefined>>({ isError: false, message: undefined })
+  const endOfStreamRef = useRef<HTMLDivElement>(null)
+  const [reset, setReset] = useState(false)
+
+  useEffect(() => {
+    endOfStreamRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [streamData])
 
   useEffect(() => {
     const fetchData = async () => {
+      setReset(false)
       setIsLoading(true)
-      setIsError(false)
+      setError({ isError: false, message: undefined })
       try {
         const response = await fetch(url, {
           method: 'POST',
@@ -33,26 +44,64 @@ const StreamingComponent = ({ data, url }: Props) => {
             return
           }
 
-          setStreamData(oldData => oldData + decoder.decode(value).replace(/\n/g, '<br/>'))
+          const decodedText = decoder.decode(value)
+          const htmlText = ansiToHtml.toHtml(decodedText).replace(/\n/g, '<br/>')
+          setStreamData(oldData => oldData + htmlText)
           return await processText(await reader.read())
         })
 
-      } catch (error) {
+      } catch (error: Error | unknown) {
         console.error('Fetch error:', error)
-        setIsError(true)
+        setError({ isError: true, message: error instanceof Error ? error.message : 'Unable to fetch data' })
         setIsLoading(false)
       }
     }
 
-    fetchData().then(() => setIsLoading(false))
+    fetchData().then(() => console.log('done'))
   }, [data, url])
+
+  const handleReset = () => {
+    setReset(true)
+    setError({ isError: false, message: undefined })
+    setIsLoading(false)
+    setStreamData('')
+  }
+
+  const ErrorMessage = () => {
+    return (
+      <Alert variant='light' color='blue' title='Unable to create report' icon={<IconInfoCircle />}>
+        {error?.message ?? 'Something wrong happened. If this error persists, please contact support.'}
+      </Alert>
+    )
+  }
+
+  const Loading = () => {
+    return (
+      <Group justify='center'>
+        <Loader color='teal' type='dots' />
+      </Group>
+    )
+  }
+
+  if (reset) {
+    return <></>
+  }
 
   return (
     <div>
-      <h3>Response</h3>
-      {isLoading && <p>Working...</p>}
-      {isError && <p>Something wrong happened...</p>}
+      <h1>Response</h1>
       <Code block dangerouslySetInnerHTML={{ __html: streamData }} style={{ whiteSpace: 'pre-wrap' }} />
+      {isLoading && <Loading />}
+
+      {error.isError && <ErrorMessage />}
+      <Space h='xs' />
+
+      <Group justify='right'>
+        <Button variant='light' color='red' onClick={handleReset}>Clear Data</Button>
+      </Group>
+      <div ref={endOfStreamRef} />
+      <Space h='xs' />
+
     </div>
   )
 }
