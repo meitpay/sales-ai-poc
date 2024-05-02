@@ -62,7 +62,6 @@ PROXY_CURL_MOCK_DATA=True
 
 # Optional - change these variables if you like
 OPENAI_MODEL_NAME="gpt-3.5-turbo"
-#OPENAI_MODEL_NAME="gpt-4-turbo"
 APP_ENV="development"
 APP_PORT=5000
 ````
