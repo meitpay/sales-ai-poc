@@ -54,7 +54,7 @@ Additional information from the social media profile if available.
 ### [Other Platform Name e.g., LinkedIn]
 
 - **Username:** [@username](https://linkedin.com/in/username)
-- **Followers:** [Number of connections or people you follow]
+- **Connections:** [Number of connections or people you follow]
 - **Engagement:** Description of how they use the platform and their level of engagement.
 
 Additional information from the social media profile if available.

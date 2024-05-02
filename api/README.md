@@ -4,7 +4,8 @@ Simple Flask API with CrewAI multi-agents.
 
 This project is using Python, Docker and CrewAI.
 
-Check out CrewAI's [Getting started](https://github.com/joaomdmoura/crewAI?tab=readme-ov-file#getting-started) to get familiar with multi-agents.
+Check out CrewAI's [Getting started](https://github.com/joaomdmoura/crewAI?tab=readme-ov-file#getting-started) to get
+familiar with multi-agents.
 
 ## Installation
 
@@ -58,7 +59,7 @@ SERPER_API_KEY=""
 
 # Required for social media search
 PROXY_CURL_TOKEN=""
-PROXY_CURL_MOCK_DATA=True
+PROXY_CURL_PRE_FETCHED_DATA=True
 
 # Optional - change these variables if you like
 OPENAI_MODEL_NAME="gpt-3.5-turbo"
@@ -68,21 +69,23 @@ APP_PORT=5000
 
 #### Proxy Curl
 
-[ProxyCurl](https://nubela.co/proxycurl/docs?shell#people-api-person-profile-endpoint) 
+[ProxyCurl](https://nubela.co/proxycurl/docs?shell#people-api-person-profile-endpoint)
 is used to get person data from LinkedIn, Twitter and Facebook.
-To call the API directly, make sure to populate the ``PROXY_CURL_TOKEN`` variable, and set ``PROXY_CURL_MOCK_DATA`` to ``False``.
 
-During development, you can use the [generateSoMeExamples.sh](io/templates/generateSoMeExamples.sh) to call the API once and use save the response for to avoid calling the API every time.
+To call the API directly, make sure to populate the ``PROXY_CURL_TOKEN`` variable, and
+set ``PROXY_CURL_PRE_FETCHED_DATA`` to ``False``.
 
-Make sure to populate the ``PROXY_CURL_TOKEN`` variable, and set ``PROXY_CURL_MOCK_DATA`` to ``True`` and populate the public identifiers in the [script](io/templates/generateSoMeExamples.sh).
+During development, you can use this [script](io/templates/generateSoMeData.sh)
+to call the API once and use save the response for to avoid calling the API every time.
+
+Make sure to populate the ``PROXY_CURL_TOKEN`` variable, and set ``PROXY_CURL_PRE_FETCHED_DATA`` to ``True`` and
+populate the public identifiers in the [script](io/templates/generateSoMeData.sh).
 
 ````bash
 LINKED_IN_PUBLIC_IDENTIFIER="<public identifier>"
 TWITTER_PUBLIC_IDENTIFIER="<public identifier>"
 FACEBOOK_PUBLIC_IDENTIFIER="<public identifier>"
 ````
-
-
 
 #### Run the API
 

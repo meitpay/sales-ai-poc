@@ -49,7 +49,7 @@ class SocialMediaProfileTool:
     def search_linkedin(url: str) -> dict:
         """Useful to find user data from linkedIn"""
 
-        if os.getenv('PROXY_CURL_MOCK_DATA'):
+        if os.getenv('PROXY_CURL_PRE_FETCHED_DATA'):
             json_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'io', 'templates', 'linkedin_example.json')
             with open(json_path, 'r') as file:
                 return json.load(file)
@@ -65,7 +65,7 @@ class SocialMediaProfileTool:
     def search_twitter(url: str) -> dict:
         """Useful to find user data from twitter"""
 
-        if os.getenv('PROXY_CURL_MOCK_DATA'):
+        if os.getenv('PROXY_CURL_PRE_FETCHED_DATA'):
             json_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'io', 'templates', 'twitter_example.json')
             with open(json_path, 'r') as file:
                 return json.load(file)
@@ -81,7 +81,7 @@ class SocialMediaProfileTool:
     def search_facebook(url: str) -> dict:
         """Useful to find user data from facebook"""
 
-        if os.getenv('PROXY_CURL_MOCK_DATA'):
+        if os.getenv('PROXY_CURL_PRE_FETCHED_DATA'):
             json_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'io', 'templates', 'facebook_example.json')
             with open(json_path, 'r') as file:
                 return json.load(file)
