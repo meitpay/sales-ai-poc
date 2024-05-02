@@ -48,17 +48,15 @@ def job_listing():
 def person_search():
     try:
         data = request.get_json()
-        person_name = data['person']
-        websites = ', '.join(data['websites'])
-        misc_information = data['miscInfo']
-        social_media_profiles = ', '.join(data['soMeProfiles'])
 
         command = [
             'python', 'crews/person_search/main.py',
-            '--person_name', person_name,
-            '--websites', websites,
-            '--misc_information', misc_information,
-            '--social_media_profiles', social_media_profiles
+            '--person_name', data['person'],
+            '--websites', ', '.join(data['websites']),
+            '--misc_information', data['miscInfo'],
+            '--linkedin_profile', data['linkedInProfile'],
+            '--twitter_profile', data['twitterProfile'],
+            '--facebook_profile', data['facebookProfile'],
         ]
 
         return Response(run_process_and_stream_output(command), mimetype='text/markdown')

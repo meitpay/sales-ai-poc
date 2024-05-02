@@ -14,14 +14,17 @@ const PersonSearch = () => {
       person: '',
       websites: [],
       miscInfo: '',
-      soMeProfiles: []
+      linkedInProfile: '',
+      twitterProfile: '',
+      facebookProfile: ''
     },
     validate: {
       person: (value: string): string | null => isStringLengthZero(value) ? 'Missing name of the person' : null
     }
   })
 
-  const [submittedValues, setSubmittedValues] = useState<Record<string, unknown> | undefined>(undefined)
+  const [submit, setSubmit] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const addField = (fieldName: string) => {
     form.insertListItem(fieldName, '')
@@ -29,6 +32,11 @@ const PersonSearch = () => {
 
   const removeField = (fieldName: string, index: number) => {
     form.removeListItem(fieldName, index - 1)
+  }
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    setSubmit(true)
   }
 
   const fields = {
@@ -44,21 +52,31 @@ const PersonSearch = () => {
       label: 'Do you have any additional information about the person?',
       description: 'Lives in X City, Y years old, from Z town etc'
     },
-    soMeProfiles: {
-      label: 'Social media accounts e.g. LinkedIn, Twitter, etc',
-      description: 'https://twitter.com/elonmusk'
+    linkedInProfile: {
+      label: 'LinkedIn Profile',
+      description: 'https://linkedin.com/in/<public-identifier>'
+    },
+    twitterProfile: {
+      label: 'Twitter/X Profile',
+      description: 'https://x.com/<public-identifier>'
+    },
+    facebookProfile: {
+      label: 'Facebook Profile',
+      description: 'https://facebook.com/<public-identifier>'
     }
   }
 
   return (
     <Container>
       <Box mx='auto'>
-        <form onSubmit={form.onSubmit((values) => {
-          setSubmittedValues(values)
-        })}>
+        <form onSubmit={form.onSubmit(() => handleSubmit())}>
           <TextInput label={fields.person.label} placeholder={fields.person.description} {...form.getInputProps('person')} />
 
           <Textarea autosize label={fields.miscInfo.label} placeholder={fields.miscInfo.description} {...form.getInputProps('miscInfo')} />
+
+          <TextInput label={fields.linkedInProfile.label} placeholder={fields.linkedInProfile.description} {...form.getInputProps('linkedInProfile')} />
+          <TextInput label={fields.twitterProfile.label} placeholder={fields.twitterProfile.description} {...form.getInputProps('twitterProfile')} />
+          <TextInput label={fields.facebookProfile.label} placeholder={fields.facebookProfile.description} {...form.getInputProps('facebookProfile')} />
 
           <Divider my='md' />
 
@@ -88,41 +106,14 @@ const PersonSearch = () => {
           ))}
 
           <Divider my='md' />
-
-          <Grid>
-            <Grid.Col span={10}>
-              <Text fw={500}>
-                {fields.soMeProfiles.label}
-              </Text>
-            </Grid.Col>
-            <Grid.Col span={1}>
-              <Button variant='light' color={'teal'} onClick={() => addField('soMeProfiles')}><IconPlus /></Button>
-            </Grid.Col>
-            <Grid.Col span={1}>
-              <Button variant='light' color='red' onClick={() => removeField('soMeProfiles', form.values.soMeProfiles.length)}><IconMinus /></Button>
-            </Grid.Col>
-          </Grid>
-
-          {form.values.soMeProfiles.map((_, index) => (
-            <Group key={index}>
-              <Space h='xs' />
-
-              <TextInput
-                style={{ width: '100%' }}
-                placeholder={fields.soMeProfiles.description}
-                {...form.getInputProps(`soMeProfiles.${index}`)}
-              />
-            </Group>
-          ))}
-
-          <Divider my='md' />
           <Group grow>
-            <Button variant='light' color='teal' type='submit' mt='md'>
+            <Button variant='light' color='teal' type='submit' mt='md' disabled={loading}>
               Submit
             </Button>
             <Button variant='light' color='red' type='reset' mt='md' onClick={() => {
               form.reset()
-              setSubmittedValues(undefined)
+              setSubmit(false)
+              setLoading(false)
             }}>
               Reset to initial values
             </Button>
@@ -130,7 +121,7 @@ const PersonSearch = () => {
         </form>
       </Box>
 
-      {submittedValues && <StreamingComponent data={submittedValues} url={`${API_ENDPOINT}/person-search`} />}
+      {submit && <StreamingComponent data={form.values} url={`${API_ENDPOINT}/person-search`} loading={loading} setLoading={setLoading} />}
 
     </Container>
   )

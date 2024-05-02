@@ -2,6 +2,8 @@
 
 python crews/person_search/main.py \
     --person_name="" \
-    --misc_information="" \
     --websites="" \
-    --social_media_profiles=""
+    --misc_information="" \
+    --linkedin_profile="" \
+    --twitter_profile="" \
+    --facebook_profile=""

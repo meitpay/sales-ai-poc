@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Container, Group } from '@mantine/core'
 import classes from './Header.module.css'
-import { ThemeColor } from './AppTheme'
+import { ThemeColor } from '../theme/AppTheme.tsx'
 import { Link } from 'react-router-dom'
 
 interface Links {
@@ -11,8 +11,7 @@ interface Links {
 
 const links: Links[] = [
   { link: '/', label: 'Home' },
-  { link: '/job-listing', label: 'Job Listing' },
-  { link: '/people-search', label: 'People Search' }
+  { link: '/person-search', label: 'Person Search' }
 ]
 
 export function Header() {
