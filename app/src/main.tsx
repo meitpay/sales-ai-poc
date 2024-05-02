@@ -1,11 +1,11 @@
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import ErrorPage from './components/layout/ErrorPage.tsx'
+import ErrorPage from './components/layout/error/ErrorPage.tsx'
 import App from './App.tsx'
-import { JobListing } from './components/forms/JobListing.tsx'
-import { PersonSearch } from './components/forms/PersonSearch.tsx'
+import { PersonSearch } from './components/form/PersonSearch.tsx'
 import { MantineProvider } from '@mantine/core'
 import { StrictMode } from 'react'
+import Home from './components/home/Home.tsx'
 
 const router = createBrowserRouter([
   {
@@ -14,8 +14,9 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'job-listing',
-        element: <JobListing />
+        path: '/',
+        element: <Home />,
+        index: true
       },
       {
         path: 'person-search',

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Dispatch, SetStateAction } from 'react'
 import { Alert, Button, Code, Group, Loader, SimpleGrid, Space } from '@mantine/core'
 import AnsiToHtml from 'ansi-to-html'
 import { IconInfoCircle } from '@tabler/icons-react'
@@ -7,12 +7,13 @@ const ansiToHtml: AnsiToHtml = new AnsiToHtml()
 
 interface Props {
   data: Record<string, unknown>,
-  url: string
+  url: string,
+  loading: boolean,
+  setLoading: Dispatch<SetStateAction<boolean>>
 }
 
-const StreamingComponent = ({ data, url }: Props) => {
+const StreamingComponent = ({ data, url, loading, setLoading }: Props) => {
   const [streamData, setStreamData] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Record<string, boolean | string | undefined>>({ isError: false, message: undefined })
   const endOfStreamRef = useRef<HTMLDivElement>(null)
   const [reset, setReset] = useState(false)
@@ -38,7 +39,7 @@ const StreamingComponent = ({ data, url }: Props) => {
     const fetchData = async () => {
       try {
         setReset(false)
-        setIsLoading(true)
+        setLoading(true)
         setError({ isError: false, message: undefined })
 
         const response = await fetch(url, {
@@ -58,7 +59,7 @@ const StreamingComponent = ({ data, url }: Props) => {
 
           if (done) {
             if (active) {
-              setIsLoading(false)
+              setLoading(false)
             }
             return
           }
@@ -79,7 +80,8 @@ const StreamingComponent = ({ data, url }: Props) => {
         }
       } finally {
         if (active) {
-          setIsLoading(false)
+          console.log('finally')
+          setLoading(false)
         }
       }
     }
@@ -90,13 +92,13 @@ const StreamingComponent = ({ data, url }: Props) => {
       active = false
       abortController.abort()
     }
-  }, [data, url])
+  }, [data, setLoading, url])
 
 
   const handleReset = () => {
     setReset(true)
     setError({ isError: false, message: undefined })
-    setIsLoading(false)
+    setLoading(false)
     setStreamData('')
   }
 
@@ -124,13 +126,13 @@ const StreamingComponent = ({ data, url }: Props) => {
     <div>
       <h1>Response</h1>
       <Code block dangerouslySetInnerHTML={{ __html: streamData }} style={{ whiteSpace: 'pre-wrap' }} />
-      {isLoading && <Loading />}
+      {loading && <Loading />}
 
       {error.isError && <ErrorMessage />}
       <Space h='xs' />
 
 
-      {!isLoading && (
+      {!loading && (
         <SimpleGrid cols={2}>
           <Group>
             <h3>Task completed</h3>

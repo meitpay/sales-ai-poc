@@ -23,7 +23,8 @@ const PersonSearch = () => {
     }
   })
 
-  const [submittedValues, setSubmittedValues] = useState<Record<string, unknown> | undefined>(undefined)
+  const [submit, setSubmit] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const addField = (fieldName: string) => {
     form.insertListItem(fieldName, '')
@@ -33,8 +34,9 @@ const PersonSearch = () => {
     form.removeListItem(fieldName, index - 1)
   }
 
-  const handleSubmit = async (values: typeof form.values) => {
-    setSubmittedValues(values)
+  const handleSubmit = async () => {
+    setLoading(true)
+    setSubmit(true)
   }
 
   const fields = {
@@ -67,7 +69,7 @@ const PersonSearch = () => {
   return (
     <Container>
       <Box mx='auto'>
-        <form onSubmit={form.onSubmit((values: typeof form.values) => handleSubmit(values))}>
+        <form onSubmit={form.onSubmit(() => handleSubmit())}>
           <TextInput label={fields.person.label} placeholder={fields.person.description} {...form.getInputProps('person')} />
 
           <Textarea autosize label={fields.miscInfo.label} placeholder={fields.miscInfo.description} {...form.getInputProps('miscInfo')} />
@@ -105,12 +107,13 @@ const PersonSearch = () => {
 
           <Divider my='md' />
           <Group grow>
-            <Button variant='light' color='teal' type='submit' mt='md'>
+            <Button variant='light' color='teal' type='submit' mt='md' disabled={loading}>
               Submit
             </Button>
             <Button variant='light' color='red' type='reset' mt='md' onClick={() => {
               form.reset()
-              setSubmittedValues(undefined)
+              setSubmit(false)
+              setLoading(false)
             }}>
               Reset to initial values
             </Button>
@@ -118,7 +121,7 @@ const PersonSearch = () => {
         </form>
       </Box>
 
-      {submittedValues && <StreamingComponent data={submittedValues} url={`${API_ENDPOINT}/person-search`} />}
+      {submit && <StreamingComponent data={form.values} url={`${API_ENDPOINT}/person-search`} loading={loading} setLoading={setLoading} />}
 
     </Container>
   )
