@@ -1,5 +1,12 @@
 from crewai import Agent
 from textwrap import dedent
+from crewai_tools.tools import FileReadTool
+from tools.some_tool import SocialMediaProfileTool
+
+person_report_tool = FileReadTool(
+    file_path='./io/templates/person_report_example.md',
+    description='A tool to read the report example file.'
+)
 
 
 class PeopleAgents:
@@ -8,52 +15,46 @@ class PeopleAgents:
         return Agent(
             role='Research Analyst',
             goal=dedent("""\
-                To gather comprehensive and accurate information about individuals, 
-                their professional achievements, academic backgrounds, affiliations, 
-                and historical mentions in media and publications.
-			    """),
+            To gather comprehensive and accurate information about individuals, 
+            their professional achievements, academic backgrounds, affiliations, 
+            and historical mentions in media and publications.
+            """),
             tools=tools,
             backstory=dedent("""\
-                Skilled in analyzing individuals, their professional experiences and achievements, 
-                identifying their key values, associates and connections   
-                from various sources, including websites and brief descriptions.
-			    """),
-            verbose=True
+            Skilled in analyzing individuals, their professional experiences and achievements, 
+            identifying their key values, associates and connections from various sources.
+            """)
         )
 
     @staticmethod
-    def social_media_agent(tools):
+    def some_agent():
         return Agent(
-            role='Social Media Investigator',
+            role='Social Media Analyst',
             goal=dedent("""\
-				To analyze the social media profile and online presence to understand a persona\'s interests, 
-				social circles, and public persona
-                """),
-            tools=tools,
+            Get accurate information about individuals on social media.
+            """),
+            tools=[
+                SocialMediaProfileTool.search_linkedin,
+                SocialMediaProfileTool.search_twitter,
+                SocialMediaProfileTool.search_facebook
+            ],
             backstory=dedent("""\
-				A former investigative journalist, known for his knack for understanding the nuances of online behavior, 
-				brings his expertise in social media analysis. 
-				He excels in connecting dots across various online platforms to create a comprehensive 
-				picture of an individual's digital footprint.
-                """),
-            verbose=True
+            An expert in analyzing individuals on social media.
+            """)
         )
 
     @staticmethod
     def writer_agent():
         return Agent(
-            role='Investigative Writer',
+            role='Biography Writer',
             goal=dedent("""\
-				Use insights from the Research Analyst and the Social Media Investigator to craft detailed, engaging, and accurate narratives 
-				about individuals, integrating diverse information into comprehensive biographical summaries, always site your sources.
-				"""),
+            Craft a detailed, engaging, and accurate narratives about the given person, 
+            integrating diverse information into comprehensive biographical summaries, always site your sources.
+            """),
+            tools=[person_report_tool],
             backstory=dedent("""\
-				A seasoned journalist with a passion for biographies, made her mark in investigative journalism. 
-				Her knack for storytelling led her to specialize in writing detailed profiles, 
-				where she weaves together threads of a person's life, work, and influence. 
-				She's writing is known for its depth, clarity, and engaging style. 
-				She often spends time researching her subjects extensively, 
-				ensuring that every article she writes is well-informed and nuanced.
-				"""),
-            verbose=True
+             A seasoned journalist with a passion for biographies and person profiling, 
+             known for its depth, clarity, and engaging style.
+             Specializes in ensuring that every article she writes is well-informed and nuanced
+             """)
         )
