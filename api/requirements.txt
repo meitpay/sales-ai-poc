@@ -1,5 +1,5 @@
-Flask~=3.0.2
-crewai~=0.22.5
+Flask~=3.0
+crewai
 crewai[tools]
 python-dotenv~=1.0.0
 flask-cors
