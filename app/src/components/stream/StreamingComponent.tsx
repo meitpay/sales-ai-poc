@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import { Alert, Button, Code, Group, Loader, Space } from '@mantine/core'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Alert, Button, Code, Group, Loader, SimpleGrid, Space } from '@mantine/core'
 import AnsiToHtml from 'ansi-to-html'
 import { IconInfoCircle } from '@tabler/icons-react'
 
-const ansiToHtml = new AnsiToHtml()
+const ansiToHtml: AnsiToHtml = new AnsiToHtml()
 
 interface Props {
   data: Record<string, unknown>,
@@ -17,48 +17,81 @@ const StreamingComponent = ({ data, url }: Props) => {
   const endOfStreamRef = useRef<HTMLDivElement>(null)
   const [reset, setReset] = useState(false)
 
-  useEffect(() => {
-    endOfStreamRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [streamData])
+  const scrollToEnd = useCallback(() => {
+    if (endOfStreamRef.current) {
+      endOfStreamRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [])
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      scrollToEnd()
+    }, 100)
+
+    return () => clearTimeout(handler)
+  }, [streamData, scrollToEnd])
+
+  useEffect(() => {
+    let active = true
+    const abortController = new AbortController()
+
     const fetchData = async () => {
-      setReset(false)
-      setIsLoading(true)
-      setError({ isError: false, message: undefined })
       try {
+        setReset(false)
+        setIsLoading(true)
+        setError({ isError: false, message: undefined })
+
         const response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
+          signal: abortController.signal
         })
 
         const reader = response?.body?.getReader()
         const decoder = new TextDecoder()
 
-        return reader?.read().then(async function processText({ done, value }): Promise<void> {
+        const processResponse = async () => {
+          const { done, value } = await (reader?.read() || { done: true })
+
           if (done) {
-            setIsLoading(false)
+            if (active) {
+              setIsLoading(false)
+            }
             return
           }
 
           const decodedText = decoder.decode(value)
           const htmlText = ansiToHtml.toHtml(decodedText).replace(/\n/g, '<br/>')
           setStreamData(oldData => oldData + htmlText)
-          return await processText(await reader.read())
-        })
 
-      } catch (error: Error | unknown) {
-        console.error('Fetch error:', error)
-        setError({ isError: true, message: error instanceof Error ? error.message : 'Unable to fetch data' })
-        setIsLoading(false)
+          await processResponse()
+        }
+
+        await processResponse()
+      } catch (error) {
+        if (active) {
+          console.error('Fetch error:', error)
+          const errorMessage = error instanceof Error ? error.message : 'Unable to fetch data'
+          setError({ isError: true, message: errorMessage })
+        }
+      } finally {
+        if (active) {
+          setIsLoading(false)
+        }
       }
     }
 
-    fetchData().then(() => console.log('done'))
+    fetchData().then(() => console.log('fetching data'))
+
+    return () => {
+      active = false
+      abortController.abort()
+    }
   }, [data, url])
+
 
   const handleReset = () => {
     setReset(true)
@@ -96,9 +129,18 @@ const StreamingComponent = ({ data, url }: Props) => {
       {error.isError && <ErrorMessage />}
       <Space h='xs' />
 
-      <Group justify='right'>
-        <Button variant='light' color='red' onClick={handleReset}>Clear Data</Button>
-      </Group>
+
+      {!isLoading && (
+        <SimpleGrid cols={2}>
+          <Group>
+            <h3>Task completed</h3>
+          </Group>
+          <Group justify='right'>
+            <Button variant='light' color='red' onClick={handleReset}>Clear Data</Button>
+          </Group>
+        </SimpleGrid>)
+      }
+
       <div ref={endOfStreamRef} />
       <Space h='xs' />
 
