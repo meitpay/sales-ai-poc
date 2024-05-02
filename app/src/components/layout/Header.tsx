@@ -12,7 +12,7 @@ interface Links {
 const links: Links[] = [
   { link: '/', label: 'Home' },
   { link: '/job-listing', label: 'Job Listing' },
-  { link: '/people-search', label: 'People Search' }
+  { link: '/person-search', label: 'Person Search' }
 ]
 
 export function Header() {
