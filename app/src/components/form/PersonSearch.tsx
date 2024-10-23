@@ -1,14 +1,24 @@
-import { Box, Button, Group, TextInput, Textarea, Container, Space, Divider, Text, Grid } from '@mantine/core'
+import {
+  Box,
+  Button,
+  Group,
+  TextInput,
+  Textarea,
+  Container,
+  Space,
+  Divider,
+  Text,
+  Grid
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useState } from 'react'
 import StreamingComponent from '../stream/StreamingComponent.tsx'
 import { isStringLengthZero } from '../../utils/stringUtils.ts'
 import { IconMinus, IconPlus } from '@tabler/icons-react'
 
-const API_ENDPOINT = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
+const API_ENDPOINT = import.meta.env.VITE_API_URL ?? 'http://localhost:3010'
 
 const PersonSearch = () => {
-
   const form = useForm({
     initialValues: {
       person: '',
@@ -19,7 +29,8 @@ const PersonSearch = () => {
       facebookProfile: ''
     },
     validate: {
-      person: (value: string): string | null => isStringLengthZero(value) ? 'Missing name of the person' : null
+      person: (value: string): string | null =>
+        isStringLengthZero(value) ? 'Missing name of the person' : null
     }
   })
 
@@ -68,35 +79,68 @@ const PersonSearch = () => {
 
   return (
     <Container>
-      <Box mx='auto'>
+      <Box mx="auto">
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          <TextInput label={fields.person.label} placeholder={fields.person.description} {...form.getInputProps('person')} />
+          <TextInput
+            label={fields.person.label}
+            placeholder={fields.person.description}
+            {...form.getInputProps('person')}
+          />
 
-          <Textarea autosize label={fields.miscInfo.label} placeholder={fields.miscInfo.description} {...form.getInputProps('miscInfo')} />
+          <Textarea
+            autosize
+            label={fields.miscInfo.label}
+            placeholder={fields.miscInfo.description}
+            {...form.getInputProps('miscInfo')}
+          />
 
-          <TextInput label={fields.linkedInProfile.label} placeholder={fields.linkedInProfile.description} {...form.getInputProps('linkedInProfile')} />
-          <TextInput label={fields.twitterProfile.label} placeholder={fields.twitterProfile.description} {...form.getInputProps('twitterProfile')} />
-          <TextInput label={fields.facebookProfile.label} placeholder={fields.facebookProfile.description} {...form.getInputProps('facebookProfile')} />
+          <TextInput
+            label={fields.linkedInProfile.label}
+            placeholder={fields.linkedInProfile.description}
+            {...form.getInputProps('linkedInProfile')}
+          />
+          <TextInput
+            label={fields.twitterProfile.label}
+            placeholder={fields.twitterProfile.description}
+            {...form.getInputProps('twitterProfile')}
+          />
+          <TextInput
+            label={fields.facebookProfile.label}
+            placeholder={fields.facebookProfile.description}
+            {...form.getInputProps('facebookProfile')}
+          />
 
-          <Divider my='md' />
+          <Divider my="md" />
 
           <Grid>
             <Grid.Col span={10}>
-              <Text fw={500}>
-                {fields.websites.label}
-              </Text>
+              <Text fw={500}>{fields.websites.label}</Text>
             </Grid.Col>
             <Grid.Col span={1}>
-              <Button variant='light' color={'teal'} onClick={() => addField('websites')}><IconPlus /></Button>
+              <Button
+                variant="light"
+                color={'teal'}
+                onClick={() => addField('websites')}
+              >
+                <IconPlus />
+              </Button>
             </Grid.Col>
             <Grid.Col span={1}>
-              <Button variant='light' color='red' onClick={() => removeField('websites', form.values.websites.length)}><IconMinus /></Button>
+              <Button
+                variant="light"
+                color="red"
+                onClick={() =>
+                  removeField('websites', form.values.websites.length)
+                }
+              >
+                <IconMinus />
+              </Button>
             </Grid.Col>
           </Grid>
 
           {form.values.websites.map((_, index) => (
             <Group key={index}>
-              <Space h='xs' />
+              <Space h="xs" />
               <TextInput
                 style={{ width: '100%' }}
                 placeholder={fields.websites.description}
@@ -105,28 +149,44 @@ const PersonSearch = () => {
             </Group>
           ))}
 
-          <Divider my='md' />
+          <Divider my="md" />
           <Group grow>
-            <Button variant='light' color='teal' type='submit' mt='md' disabled={loading}>
+            <Button
+              variant="light"
+              color="teal"
+              type="submit"
+              mt="md"
+              disabled={loading}
+            >
               Submit
             </Button>
-            <Button variant='light' color='red' type='reset' mt='md' onClick={() => {
-              form.reset()
-              setSubmit(false)
-              setLoading(false)
-            }}>
+            <Button
+              variant="light"
+              color="red"
+              type="reset"
+              mt="md"
+              onClick={() => {
+                form.reset()
+                setSubmit(false)
+                setLoading(false)
+              }}
+            >
               Reset to initial values
             </Button>
           </Group>
         </form>
       </Box>
 
-      {submit && <StreamingComponent data={form.values} url={`${API_ENDPOINT}/person-search`} loading={loading} setLoading={setLoading} />}
-
+      {submit && (
+        <StreamingComponent
+          data={form.values}
+          url={`${API_ENDPOINT}/person-search`}
+          loading={loading}
+          setLoading={setLoading}
+        />
+      )}
     </Container>
   )
 }
 
-export {
-  PersonSearch
-}
+export { PersonSearch }

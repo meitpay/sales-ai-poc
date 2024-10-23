@@ -5,7 +5,7 @@ services:
       dockerfile: docker/Dockerfile
     working_dir: /usr/src/api
     ports:
-      - ${API_PORT:-5000}:5000
+      - ${API_PORT:-3010}:5000
     volumes:
       - ./api:/usr/src/api
     environment:
